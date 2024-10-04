@@ -72,5 +72,24 @@ describe Grape::API do
         expect(actual).to eq('/books/:id/loans/:loan_id')
       end
     end
+
+    context 'when same path for different methods' do
+      subject do
+        Class.new(described_class) do
+          resource :books do
+            post do
+            end
+
+            get do
+            end
+          end
+        end
+      end
+
+      it 'allows to recognize both endpoints' do
+        actual = subject.recognize_path('/books')
+        expect(actual.routes.size).to eq(2)
+      end
+    end
   end
 end
